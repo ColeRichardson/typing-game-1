@@ -1,4 +1,6 @@
+import random
 import tkinter as tk
+from tkinter import filedialog
 import time
 from typing import List
 
@@ -10,26 +12,31 @@ class GUI:
 		self.end = 0.0
 		self.time1 = 0.0
 		self.check = 0
-		self.sentence = 'im pickle rick ree ree'
 		self.sentence_list = []
+		self.sentence_check = None
 		self.root = tk.Tk()
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
+		self.filename = 'test_phrases.txt'
 
+		self.sentence = tk.StringVar()
 		self.wpm_var = tk.StringVar()
 		self.wpm_var.set('Finish the sentence to correctly to get your wpm')
 
+		
 		Label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
-		Label2 = tk.Label(self.root, text=self.sentence, background='green', font=15, padx=20, pady=20)
+		Label2 = tk.Label(self.root, textvariable=self.sentence, background='green', font=15, padx=20, pady=20)
 		self.wpm_Label = tk.Label(self.root, textvariable=self.wpm_var, background='red', font=15, padx=20, pady=20)
 		test = self.root.register(self.checkEntry)
 		self.Entry1 = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(test, '%i', '%P'))
-		self.Button1 = tk.Button(self.root, text='Read File', command=self.read_file('test_phrases.txt'))
+		Button1 = tk.Button(self.root, text='Import txt file', command=self.prompt_import)
+
+		# Packing widgets
 		Label1.pack()
 		Label2.pack()
 		self.Entry1.pack()
 		self.wpm_Label.pack()
-		self.Button1.pack()
+		Button1.pack()
 
 
 
@@ -41,14 +48,14 @@ class GUI:
 		:param text:
 		:return:
 		"""
+		print(text)
+		print(self.sentence_check)
 		if self.check == 0:
 			self.check += 1
 			self.start_timer()
-
-		if text == self.sentence:
+		if text == self.sentence_check:
 			self.end_timer()
 			self.get_wpm()
-
 		return True
 
 	def start_timer(self):
@@ -84,7 +91,7 @@ class GUI:
 		:return:
 		"""
 		num_words = 1
-		for space in self.sentence:
+		for space in self.sentence_check:
 			if space == ' ':
 				num_words += 1
 		return num_words
@@ -96,10 +103,18 @@ class GUI:
 		"""
 		self.wpm_var.set('Your wpm is: ' + str(int(self.wpm)))
 
-	def read_file(self, my_file: str):
-		file_name = open(my_file, 'r')
+	def read_file(self):
+		file_name = open(self.root.fileName, 'r')
 		for line in file_name:
 			self.sentence_list.append(line.rstrip())
-		print(self.sentence_list)
+		file_name.close()
 
-	
+	def prompt_import(self):
+		self.root.fileName = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+		self.read_file()
+		self.choose_sentence()
+
+	def choose_sentence(self):
+		rand = random.randint(0, len(self.sentence_list)-1)
+		self.sentence.set(self.sentence_list[rand])
+		self.sentence_check = self.sentence_list[rand]
