@@ -1,5 +1,6 @@
 import tkinter as tk
 import time
+from typing import List
 
 class GUI:
 
@@ -10,6 +11,7 @@ class GUI:
 		self.time1 = 0.0
 		self.check = 0
 		self.sentence = 'im pickle rick ree ree'
+		self.sentence_list = []
 		self.root = tk.Tk()
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
@@ -22,11 +24,12 @@ class GUI:
 		self.wpm_Label = tk.Label(self.root, textvariable=self.wpm_var, background='red', font=15, padx=20, pady=20)
 		test = self.root.register(self.checkEntry)
 		self.Entry1 = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(test, '%i', '%P'))
-
+		self.Button1 = tk.Button(self.root, text='Read File', command=self.read_file('test_phrases.txt'))
 		Label1.pack()
 		Label2.pack()
 		self.Entry1.pack()
 		self.wpm_Label.pack()
+		self.Button1.pack()
 
 
 
@@ -93,9 +96,10 @@ class GUI:
 		"""
 		self.wpm_var.set('Your wpm is: ' + str(int(self.wpm)))
 
+	def read_file(self, my_file: str):
+		file_name = open(my_file, 'r')
+		for line in file_name:
+			self.sentence_list.append(line.rstrip())
+		print(self.sentence_list)
 
-
-
-
-
-
+	
