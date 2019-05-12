@@ -1,3 +1,4 @@
+import os
 import random
 import tkinter as tk
 from tkinter import filedialog
@@ -8,21 +9,23 @@ class GUI:
 
 	def __init__(self):
 		self.wpm = 0
+		self.wpmList = []
+		self.avg_wpm = 0
 		self.start = 0.0
 		self.end = 0.0
-		self.time1 = 0.0
-		self.check = 0
+		self.lineIndex = 0
+		self.check = True		# Singleton for timer
 		self.sentence_list = []
 		self.sentence_check = None
 		self.root = tk.Tk()
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
-		self.filename = 'test_phrases.txt'
-		self.wordsList = []
 
 		self.sentence = tk.StringVar()
 		self.wpm_var = tk.StringVar()
+		self.avg_wpm_var = tk.StringVar()
 		self.wpm_var.set('Finish the sentence to correctly to get your wpm')
+		self.avg_wpm_var.set('Average WPM for your session')
 
 
 		Label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
@@ -31,6 +34,8 @@ class GUI:
 		test = self.root.register(self.checkEntry)
 		self.Entry1 = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(test, '%i', '%P'))
 		Button1 = tk.Button(self.root, text='Import txt file', command=self.prompt_import)
+		Label3 = tk.Label(self.root, textvariable=self.avg_wpm_var, padx=10, pady=10, font=12)
+		resetButton = tk.Button(self.root, text='Reset', command=self.reset)
 
 		# Packing widgets
 		Label1.pack()
@@ -38,6 +43,8 @@ class GUI:
 		self.Entry1.pack()
 		self.wpm_Label.pack()
 		Button1.pack()
+		Label3.pack()
+		resetButton.pack()
 
 
 
@@ -51,8 +58,8 @@ class GUI:
 		"""
 		print(text)
 		print(self.sentence_check)
-		if self.check == 0:
-			self.check += 1
+		if self.check:
+			self.check = False 
 			self.start_timer()
 		if text == self.sentence_check:
 			self.end_timer()
@@ -81,8 +88,7 @@ class GUI:
 		get the users words per minute (wpm)
 		:return:
 		"""
-		self.time1 = self.end - self.start
-		time_fact = 60/self.time1
+		time_fact = 60/(self.end - self.start)
 		self.wpm = time_fact * self.get_num_words()
 		self.update_wpm_label()
 
@@ -111,14 +117,31 @@ class GUI:
 		file_name.close()
 
 	def prompt_import(self):
-		self.root.fileName = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
+		self.root.fileName = filedialog.askopenfilename(initialdir=os.getcwd() ,title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
 		self.read_file()
 		self.choose_sentence()
 
-	def choose_sentence(self):
-		rand = random.randint(0, len(self.sentence_list)-1)
-		self.sentence.set(self.sentence_list[rand])
-		self.sentence_check = self.sentence_list[rand]
-		self.wordsList = self.sentence_list[rand].split()
+	def choose_sentence(self):	
+		self.sentence.set(self.sentence_list[self.lineIndex])
+		self.sentence_check = self.sentence_list[self.lineIndex]
+		if self.lineIndex < len(self.sentence_list)-1:
+			self.lineIndex += 1
 
+	def reset(self):
+		if self.wpm != 0:
+			self.wpmList.append(self.wpm)
+		self.wpm = 0
+		self.start = 0.0
+		self.end = 0.0
+		if self.check == False:
+			self.check = True
+		self.choose_sentence()
+		self.Entry1.delete(0, 'end')
+		self.set_avg_wpm()	
 
+	def set_avg_wpm(self):
+		x = 0
+		for wpm in self.wpmList:
+			x += wpm
+		self.avg_wpm = int( x / len(self.wpmList))
+		self.avg_wpm_var.set(str(self.avg_wpm))
