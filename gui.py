@@ -18,14 +18,15 @@ class GUI:
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
 		self.filename = 'test_phrases.txt'
+		self.wordsList = []
 
 		self.sentence = tk.StringVar()
 		self.wpm_var = tk.StringVar()
 		self.wpm_var.set('Finish the sentence to correctly to get your wpm')
 
-		
+
 		Label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
-		Label2 = tk.Label(self.root, textvariable=self.sentence, background='green', font=15, padx=20, pady=20)
+		Label2 = tk.Label(self.root, textvariable=self.sentence, background='green', font=25, padx=20, pady=20, height=3, wraplength=700)
 		self.wpm_Label = tk.Label(self.root, textvariable=self.wpm_var, background='red', font=15, padx=20, pady=20)
 		test = self.root.register(self.checkEntry)
 		self.Entry1 = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(test, '%i', '%P'))
@@ -110,7 +111,7 @@ class GUI:
 		file_name.close()
 
 	def prompt_import(self):
-		self.root.fileName = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+		self.root.fileName = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
 		self.read_file()
 		self.choose_sentence()
 
@@ -118,3 +119,6 @@ class GUI:
 		rand = random.randint(0, len(self.sentence_list)-1)
 		self.sentence.set(self.sentence_list[rand])
 		self.sentence_check = self.sentence_list[rand]
+		self.wordsList = self.sentence_list[rand].split()
+
+
