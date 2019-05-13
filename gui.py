@@ -10,49 +10,50 @@ class GUI:
 	def __init__(self):
 		self.wpm = 0
 		self.wpmList = []
-		self.avg_wpm = 0
+		self.avgWpm = 0
 		self.start = 0.0
 		self.end = 0.0
 		self.lineIndex = 0
 		self.check = True		# Singleton for timer
-		self.sentence_list = []
-		self.sentence_check = None
+		self.sentenceList = []
+		self.sentenceCheck = None
 		self.root = tk.Tk()
-		self.root.title("Typing Game")
-		self.root.geometry("1500x1000")
 
 		self.sentence = tk.StringVar()
-		self.wpm_var = tk.StringVar()
-		self.avg_wpm_var = tk.StringVar()
-		self.wpm_var.set('Finish the sentence to correctly to get your wpm')
-		self.avg_wpm_var.set('Average WPM for your session')
+		self.wpmVar = tk.StringVar()
+		self.avgwpmVar = tk.StringVar()
+		self.wpmVar.set('Finish the sentence to correctly to get your wpm')
+		self.avgwpmVar.set('Average WPM for your session')
 
 
 		self.setUpStage()
+		self.promptImport()
 
 	def setUpStage(self):
 		"""
 		Sets up the GUI elements on the page
 		"""
-		Label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
-		Label2 = tk.Label(self.root, textvariable=self.sentence, background='green', font=25, padx=20, pady=20, height=3, wraplength=700)
-		self.wpm_Label = tk.Label(self.root, textvariable=self.wpm_var, background='red', font=15, padx=20, pady=20)
-		test = self.root.register(self.checkEntry)
-		self.Entry1 = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(test, '%i', '%P'))
-		Button1 = tk.Button(self.root, text='Import txt file', command=self.prompt_import)
-		Label3 = tk.Label(self.root, textvariable=self.avg_wpm_var, padx=10, pady=10, font=12)
+		self.root.title("Typing Game")
+		self.root.geometry("1500x1000")
+		label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
+		currentSentance = tk.Label(self.root, textvariable=self.sentence, background='green', font=25, padx=20, pady=20, height=3, wraplength=700)
+		self.wpmLabel = tk.Label(self.root, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
+		checkWord = self.root.register(self.isValidSentance)
+		self.inputTextBox = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(checkWord, '%i', '%P'))
+		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport)
+		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
 		resetButton = tk.Button(self.root, text='Reset', command=self.reset)
 
 		# Packing widgets
-		Label1.pack()
-		Label2.pack()
-		self.Entry1.pack()
-		self.wpm_Label.pack()
-		Button1.pack()
-		Label3.pack()
+		label1.pack()
+		currentSentance.pack()
+		self.inputTextBox.pack()
+		self.wpmLabel.pack()
+		importFile.pack()
+		wordsPerMinute.pack()
 		resetButton.pack()
 
-	def checkEntry(self, index, text):
+	def isValidSentance(self, index, text):
 		"""
 		checks the contents of the entry widget to see when the user starts typing
 		and when their sentence matches the required sentence.
@@ -61,16 +62,16 @@ class GUI:
 		:return:
 		"""
 		print(text)
-		print(self.sentence_check)
+		print(self.sentenceCheck)
 		if self.check:
 			self.check = False 
-			self.start_timer()
-		if text == self.sentence_check:
-			self.end_timer()
-			self.get_wpm()
+			self.startTimer()
+		if text == self.sentenceCheck:
+			self.endTimer()
+			self.getWpm()
 		return True
 
-	def start_timer(self):
+	def startTimer(self):
 		"""
 		starts the timer
 		:return:
@@ -78,7 +79,7 @@ class GUI:
 		self.start = time.time()
 
 
-	def end_timer(self):
+	def endTimer(self):
 		"""
 		ends the timer
 		:return:
@@ -86,49 +87,42 @@ class GUI:
 		self.end = time.time()
 
 
-	def get_wpm(self):
+	def getWpm(self):
 		"""
 		gets the time it took the user to type and uses that to
 		get the users words per minute (wpm)
 		:return:
 		"""
 		time_fact = 60/(self.end - self.start)
-		self.wpm = time_fact * self.get_num_words()
-		self.update_wpm_label()
+		self.wpm = time_fact * self.getNumWords()
+		self.wpmVar.set('Your wpm is: ' + str(int(self.wpm)))
 
-	def get_num_words(self):
+	def getNumWords(self):
 		"""
 		gets the number of words in the sentence the user was asked to type
 		:return:
 		"""
-		num_words = 1
-		for space in self.sentence_check:
+		numWords = 1
+		for space in self.sentenceCheck:
 			if space == ' ':
-				num_words += 1
-		return num_words
+				numWords += 1
+		return numWords	
 
-	def update_wpm_label(self):
-		"""
-		update the wpm label to contain the users wpm
-		:return:
-		"""
-		self.wpm_var.set('Your wpm is: ' + str(int(self.wpm)))
+	def readFile(self):
+		fileName = open(self.root.fileName, 'r')
+		for line in fileName:
+			self.sentenceList.append(line.rstrip())
+		fileName.close()
 
-	def read_file(self):
-		file_name = open(self.root.fileName, 'r')
-		for line in file_name:
-			self.sentence_list.append(line.rstrip())
-		file_name.close()
-
-	def prompt_import(self):
+	def promptImport(self):
 		self.root.fileName = filedialog.askopenfilename(initialdir=os.getcwd() ,title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
-		self.read_file()
-		self.choose_sentence()
+		self.readFile()
+		self.chooseSentance()
 
-	def choose_sentence(self):	
-		self.sentence.set(self.sentence_list[self.lineIndex])
-		self.sentence_check = self.sentence_list[self.lineIndex]
-		if self.lineIndex < len(self.sentence_list)-1:
+	def chooseSentance(self):	
+		self.sentence.set(self.sentenceList[self.lineIndex])
+		self.sentenceCheck = self.sentenceList[self.lineIndex]
+		if self.lineIndex < len(self.sentenceList)-1:
 			self.lineIndex += 1
 
 	def reset(self):
@@ -139,13 +133,13 @@ class GUI:
 		self.end = 0.0
 		if self.check == False:
 			self.check = True
-		self.choose_sentence()
-		self.Entry1.delete(0, 'end')
-		self.set_avg_wpm()	
+		self.chooseSentance()
+		self.inputTextBox.delete(0, 'end')
+		self.setWpmAvg()	
 
-	def set_avg_wpm(self):
+	def setWpmAvg(self):
 		x = 0
 		for wpm in self.wpmList:
 			x += wpm
-		self.avg_wpm = int( x / len(self.wpmList))
-		self.avg_wpm_var.set(str(self.avg_wpm))
+		self.avgWPM = int( x / len(self.wpmList))
+		self.avgwpmVar.set(str(self.avgWPM))
