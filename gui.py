@@ -28,6 +28,12 @@ class GUI:
 		self.avg_wpm_var.set('Average WPM for your session')
 
 
+		self.setUpStage()
+
+	def setUpStage(self):
+		"""
+		Sets up the GUI elements on the page
+		"""
 		Label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
 		Label2 = tk.Label(self.root, textvariable=self.sentence, background='green', font=25, padx=20, pady=20, height=3, wraplength=700)
 		self.wpm_Label = tk.Label(self.root, textvariable=self.wpm_var, background='red', font=15, padx=20, pady=20)
@@ -45,8 +51,6 @@ class GUI:
 		Button1.pack()
 		Label3.pack()
 		resetButton.pack()
-
-
 
 	def checkEntry(self, index, text):
 		"""
