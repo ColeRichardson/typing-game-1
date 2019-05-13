@@ -13,7 +13,8 @@ class GUI:
 		self.avgWpm = 0
 		self.start = 0.0
 		self.end = 0.0
-		self.lineIndex = 0
+		self.numOfSentances = 0
+		self.currentLine = 0
 		self.check = True		# Singleton for timer
 		self.sentenceList = []
 		self.sentenceCheck = None
@@ -42,7 +43,9 @@ class GUI:
 		self.inputTextBox = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(checkWord, '%i', '%P'))
 		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport)
 		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
-		resetButton = tk.Button(self.root, text='Reset', command=self.reset)
+		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder)
+		randomButton = tk.Button(self.root, text='Random Sentance', command=self.resetRandom)
+
 
 		# Packing widgets
 		label1.pack()
@@ -52,6 +55,7 @@ class GUI:
 		importFile.pack()
 		wordsPerMinute.pack()
 		resetButton.pack()
+		randomButton.pack()
 
 	def isValidSentance(self, index, text):
 		"""
@@ -65,27 +69,11 @@ class GUI:
 		print(self.sentenceCheck)
 		if self.check:
 			self.check = False 
-			self.startTimer()
+			self.start = time.time()
 		if text == self.sentenceCheck:
-			self.endTimer()
+			self.end = time.time()
 			self.getWpm()
 		return True
-
-	def startTimer(self):
-		"""
-		starts the timer
-		:return:
-		"""
-		self.start = time.time()
-
-
-	def endTimer(self):
-		"""
-		ends the timer
-		:return:
-		"""
-		self.end = time.time()
-
 
 	def getWpm(self):
 		"""
@@ -110,36 +98,62 @@ class GUI:
 
 	def readFile(self):
 		fileName = open(self.root.fileName, 'r')
+		self.numOfSentances = 0
 		for line in fileName:
 			self.sentenceList.append(line.rstrip())
+			self.numOfSentances += 1
 		fileName.close()
 
 	def promptImport(self):
 		self.root.fileName = filedialog.askopenfilename(initialdir=os.getcwd() ,title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
+		self.sentenceList = []
 		self.readFile()
-		self.chooseSentance()
+		self.randomSentance()
 
-	def chooseSentance(self):	
-		self.sentence.set(self.sentenceList[self.lineIndex])
-		self.sentenceCheck = self.sentenceList[self.lineIndex]
-		if self.lineIndex < len(self.sentenceList)-1:
-			self.lineIndex += 1
+	def nextSentance(self):
+		self.currentLine += 1
+		if self.currentLine > self.numOfSentances - 1:
+			self.currentLine = 0
+		print("On line: " + str(self.currentLine))
+		self.sentence.set(self.sentenceList[self.currentLine])
+		self.sentenceCheck = self.sentenceList[self.currentLine]
+
+	def randomSentance(self):	
+		oldLine = self.currentLine
+		while (oldLine == self.currentLine):
+			self.currentLine = random.randint(0, self.numOfSentances - 1)
+		print("Old: " + str(oldLine) + " current: " + str(self.currentLine))
+		self.sentence.set(self.sentenceList[self.currentLine])
+		self.sentenceCheck = self.sentenceList[self.currentLine]
+	
+	def resetRandom(self):
+		self.reset()
+		self.randomSentance()
+
+	def resetOrder(self):
+		self.reset()
+		self.nextSentance()
 
 	def reset(self):
-		if self.wpm != 0:
-			self.wpmList.append(self.wpm)
-		self.wpm = 0
-		self.start = 0.0
-		self.end = 0.0
-		if self.check == False:
-			self.check = True
-		self.chooseSentance()
-		self.inputTextBox.delete(0, 'end')
-		self.setWpmAvg()	
+		if self.sentenceList != []:
+			if self.wpm != 0:
+				self.wpmList.append(self.wpm)
+			self.wpm = 0
+			self.start = 0.0
+			self.end = 0.0
+			if self.check == False:
+				self.check = True
+
+			self.inputTextBox.delete(0, 'end')
+			self.setWpmAvg()	
+		
 
 	def setWpmAvg(self):
 		x = 0
 		for wpm in self.wpmList:
 			x += wpm
-		self.avgWPM = int( x / len(self.wpmList))
-		self.avgwpmVar.set(str(self.avgWPM))
+		if self.avgWpm == 0:
+			self.avgWpm = x
+		else:
+			self.avgWpm = int( x / len(self.wpmList))
+		self.avgwpmVar.set("Your average wpm is: " + str(self.avgWpm))
