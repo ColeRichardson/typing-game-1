@@ -68,8 +68,9 @@ class GUI:
 		print(text)
 		print(self.sentenceCheck)
 		if self.check:
-			self.check = False
 			self.start = time.time()
+			self.check = False
+
 		if text == self.sentenceCheck:
 			self.end = time.time()
 			self.getWpm()
