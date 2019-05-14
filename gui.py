@@ -23,8 +23,8 @@ class GUI:
 		self.sentence = tk.StringVar()
 		self.wpmVar = tk.StringVar()
 		self.avgwpmVar = tk.StringVar()
-		self.wpmVar.set('Finish the sentence correctly to get your wpm')
-		self.avgwpmVar.set('Average WPM for your session')
+		self.wpmVar.set('Type the sentence to get your words per minute (wpm)')
+		self.avgwpmVar.set('Average WPM for your session: ')
 
 		self.setUpStage()
 
@@ -34,28 +34,27 @@ class GUI:
 		"""
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
-		label1 = tk.Label(self.root, text='Type this sentence', background='orange', padx=10, pady=10, font=12)
-		currentSentence = tk.Label(self.root, textvariable=self.sentence, background='green', font=25, padx=20, pady=20, height=3, wraplength=700)
+		title = tk.Label(self.root, text='Welcome to Typing Tutor! Import a text file to begin! :D', background='#3c7ee8', font=('Helvetica', 30), padx=10)
+		currentSentance = tk.Label(self.root, textvariable=self.sentence, background='green', font=('Helvetica', 20), padx=100, pady=5, height=5, wraplength=700)
 		self.wpmLabel = tk.Label(self.root, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
 		checkWord = self.root.register(self.isValidSentence)
-		self.inputTextBox = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(checkWord, '%i', '%P'))
-		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport)
+		self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'))
+		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport, background='blue', foreground='white', font=('Helvetica', 13))
 		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
-		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.resetOrder)
-		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom)
-		resetButton = tk.Button(self.root, text='Reset', command=self.hardReset)
-
+		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder)
+		randomButton = tk.Button(self.root, text='Random Sentance', command=self.resetRandom)
+		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.nextSentence)
 
 		# Packing widgets
-		label1.pack()
-		currentSentence.pack()
-		self.inputTextBox.pack()
+		title.pack(fill=tk.X)
+		currentSentance.pack(pady=30)
+		self.inputTextBox.pack(pady=20)
+		importFile.pack(padx=20, side=tk.LEFT)
+		resetButton.pack(padx=20, side=tk.LEFT)
+		randomButton.pack(padx=20,side=tk.LEFT)	
 		self.wpmLabel.pack()
-		importFile.pack()
 		wordsPerMinute.pack()
 		nextSentenceButton.pack()
-		randomButton.pack()
-		resetButton.pack()
 
 	def isValidSentence(self, index, text):
 		"""
