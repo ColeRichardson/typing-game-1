@@ -26,9 +26,7 @@ class GUI:
 		self.wpmVar.set('Finish the sentence to correctly to get your wpm')
 		self.avgwpmVar.set('Average WPM for your session')
 
-
 		self.setUpStage()
-		self.promptImport()
 
 	def setUpStage(self):
 		"""
