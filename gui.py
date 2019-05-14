@@ -41,8 +41,9 @@ class GUI:
 		self.inputTextBox = tk.Entry(self.root, bg='yellow', width=100, bd=3, font=20, validate='key', validatecommand=(checkWord, '%i', '%P'))
 		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport)
 		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
-		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder)
+		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.resetOrder)
 		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom)
+		resetButton = tk.Button(self.root, text='Reset', command=self.hardReset)
 
 
 		# Packing widgets
@@ -52,8 +53,9 @@ class GUI:
 		self.wpmLabel.pack()
 		importFile.pack()
 		wordsPerMinute.pack()
-		resetButton.pack()
+		nextSentenceButton.pack()
 		randomButton.pack()
+		resetButton.pack()
 
 	def isValidSentence(self, index, text):
 		"""
@@ -107,6 +109,7 @@ class GUI:
 		self.sentenceList = []
 		self.readFile()
 		self.randomSentence()
+		self.inputTextBox.delete(0, 'end')
 
 	def nextSentence(self):
 		self.currentLine += 1
@@ -145,6 +148,27 @@ class GUI:
 			self.inputTextBox.delete(0, 'end')
 			self.setWpmAvg()
 
+	def hardReset(self):
+		"""
+		resets all values to the original values in the init,
+		clears everything, resets everything to original state
+		similar to reopening the program
+		:return:
+		"""
+		self.wpm = 0
+		self.wpmList = []
+		self.avgWpm = 0
+		self.start = 0.0
+		self.end = 0.0
+		self.numOfSentences = 0
+		self.currentLine = 0
+		self.check = True  # Singleton for timer
+		self.sentenceList = []
+		self.sentenceCheck = None
+		self.sentence.set('')
+		self.wpmVar.set('Finish the sentence correctly to get your wpm')
+		self.avgwpmVar.set('Average WPM for your session')
+		self.inputTextBox.delete(0, 'end')
 
 	def setWpmAvg(self):
 		x = 0
