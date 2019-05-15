@@ -51,7 +51,7 @@ class GUI:
 		self.inputTextBox.pack(pady=20)
 		importFile.pack(padx=20, side=tk.LEFT)
 		resetButton.pack(padx=20, side=tk.LEFT)
-		randomButton.pack(padx=20,side=tk.LEFT)	
+		randomButton.pack(padx=20,side=tk.LEFT)
 		self.wpmLabel.pack()
 		wordsPerMinute.pack()
 		nextSentenceButton.pack()
@@ -105,7 +105,7 @@ class GUI:
 		fileName.close()
 
 	def promptImport(self):
-		self.root.fileName = filedialog.askopenfilename(initialdir=os.getcwd() ,title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
+		self.root.fileName = filedialog.askopenfilename(initialdir='os.getcwd()//textFiles',title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
 		self.sentenceList = []
 		self.readFile()
 		self.randomSentence()
