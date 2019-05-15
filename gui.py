@@ -39,11 +39,11 @@ class GUI:
 		self.wpmLabel = tk.Label(self.root, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
 		checkWord = self.root.register(self.isValidSentence)
 		self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'))
-		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport, background='blue', foreground='white', font=('Helvetica', 13))
+		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport, highlightbackground='blue',background='blue', foreground='white', font=('Helvetica', 13))
 		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
-		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder)
-		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom)
-		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.nextSentence)
+		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder, highlightbackground='blue', background='blue', foreground='white')
+		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='blue', foreground='white')
+		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.nextSentence, highlightbackground='blue', background='blue', foreground='white')
 
 		# Packing widgets
 		title.pack(fill=tk.X)
@@ -52,9 +52,9 @@ class GUI:
 		importFile.pack(padx=20, side=tk.LEFT)
 		resetButton.pack(padx=20, side=tk.LEFT)
 		randomButton.pack(padx=20,side=tk.LEFT)
+		nextSentenceButton.pack(padx=20, side=tk.LEFT)
 		self.wpmLabel.pack()
 		wordsPerMinute.pack()
-		nextSentenceButton.pack()
 
 	def isValidSentence(self, index, text):
 		"""
