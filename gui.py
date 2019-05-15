@@ -105,7 +105,7 @@ class GUI:
 		fileName.close()
 
 	def promptImport(self):
-		self.root.fileName = filedialog.askopenfilename(initialdir='os.getcwd()//textFiles',title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
+		self.root.fileName = filedialog.askopenfilename(initialdir=os.getcwd() + '/textFiles',title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
 		self.sentenceList = []
 		self.readFile()
 		self.randomSentence()
