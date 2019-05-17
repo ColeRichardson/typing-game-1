@@ -1,8 +1,8 @@
 import os
 import random
+import time
 import tkinter as tk
 from tkinter import filedialog
-import time
 from typing import List
 
 class GUI:
@@ -34,27 +34,49 @@ class GUI:
 		"""
 		self.root.title("Typing Game")
 		self.root.geometry("1500x1000")
+
 		title = tk.Label(self.root, text='Welcome to Typing Tutor! Import a text file to begin! :D', background='#3c7ee8', font=('Helvetica', 30), padx=10)
+
 		currentSentence = tk.Label(self.root, textvariable=self.sentence, background='green', font=('Helvetica', 20), padx=100, pady=5, height=5, wraplength=700)
-		self.wpmLabel = tk.Label(self.root, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
+
 		checkWord = self.root.register(self.isValidSentence)
-		self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'))
-		importFile = tk.Button(self.root, text='Import txt file', command=self.promptImport, highlightbackground='blue',background='blue', foreground='white', font=('Helvetica', 13))
-		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
-		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder, highlightbackground='blue', background='blue', foreground='white')
-		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='blue', foreground='white')
-		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.nextSentence, highlightbackground='blue', background='blue', foreground='white')
+		self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'), insertbackground='white')
+
+		# Framing WPM labels
+		wpmFrame = tk.Frame(self.root)
+		currentWpmLabel = tk.Label(wpmFrame, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
+		avgWpmLabel = tk.Label(wpmFrame, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
 
 		# Packing widgets
 		title.pack(fill=tk.X)
 		currentSentence.pack(pady=30)
 		self.inputTextBox.pack(pady=20)
-		importFile.pack(padx=20, side=tk.LEFT)
-		resetButton.pack(padx=20, side=tk.LEFT)
-		randomButton.pack(padx=20,side=tk.LEFT)
-		nextSentenceButton.pack(padx=20, side=tk.LEFT)
-		self.wpmLabel.pack()
-		wordsPerMinute.pack()
+		currentWpmLabel.pack()
+		avgWpmLabel.pack()
+		wpmFrame.pack()
+
+		self.makeButtons()
+
+	def makeButtons(self):
+		"""
+		Initilizes four buttons for gui.
+		"""
+		buttonFrame = tk.Frame(self.root)
+
+		importFile = tk.Button(buttonFrame, text='Import txt file', command=self.promptImport, highlightbackground='blue',background='#9544E5', foreground='white')
+
+		randomButton = tk.Button(buttonFrame, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='#17B0F2', foreground='white')
+
+		nextSentenceButton = tk.Button(buttonFrame, text='Next Sentence', command=self.nextSentence, highlightbackground='blue', background='#17B0F2', foreground='white')
+
+		resetButton = tk.Button(buttonFrame, text='Reset', command=self.hardReset, highlightbackground='blue', background='#980000', foreground='white')
+
+		importFile.pack(side=tk.LEFT, padx=5)
+		nextSentenceButton.pack(side=tk.LEFT, padx=5)
+		randomButton.pack(side=tk.LEFT, padx=5)
+		resetButton.pack(side=tk.LEFT, padx=5)
+		buttonFrame.pack()
+
 
 	def isValidSentence(self, index, text):
 		"""
@@ -118,6 +140,7 @@ class GUI:
 		print("On line: " + str(self.currentLine))
 		self.sentence.set(self.sentenceList[self.currentLine])
 		self.sentenceCheck = self.sentenceList[self.currentLine]
+		self.inputTextBox.delete(0, 'end')
 
 	def randomSentence(self):
 		oldLine = self.currentLine
