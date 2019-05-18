@@ -19,7 +19,6 @@ class GUI:
 		self.sentenceList = []
 		self.sentenceCheck = None
 		self.root = tk.Tk()
-
 		self.sentence = tk.StringVar()
 		self.wpmVar = tk.StringVar()
 		self.avgwpmVar = tk.StringVar()
@@ -43,7 +42,7 @@ class GUI:
 		wordsPerMinute = tk.Label(self.root, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
 		resetButton = tk.Button(self.root, text='Reset', command=self.resetOrder, highlightbackground='blue', background='blue', foreground='white')
 		randomButton = tk.Button(self.root, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='blue', foreground='white')
-		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.nextSentence, highlightbackground='blue', background='blue', foreground='white')
+		nextSentenceButton = tk.Button(self.root, text='Next Sentence', command=self.resetOrder, highlightbackground='blue', background='blue', foreground='white')
 
 		# Packing widgets
 		title.pack(fill=tk.X)
