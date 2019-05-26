@@ -82,6 +82,7 @@ class GUI:
 		"""
 		checks the contents of the entry widget to see when the user starts typing
 		and when their sentence matches the required sentence.
+		-add find_wrong_word to check each time a character is typed.
 		:param index:
 		:param text:
 		:return:
@@ -95,7 +96,22 @@ class GUI:
 		if text == self.sentenceCheck:
 			self.end = time.time()
 			self.getWpm()
+
 		return True
+
+	def find_wrong_word(self):
+		""" creates a list by splitting the current contents of the list,
+		then does the below for loop to return the missing words from the self.sentence check,
+		effectively shows the user what word they typed wrong.
+
+		Example:
+		x = ['word', 'cat', 'dog,']
+		y = ['word', 'dog,']
+		i = 0
+		for item in x:
+			x.remove(y[i])
+     		i += 1
+		"""
 
 	def getWpm(self):
 		"""
