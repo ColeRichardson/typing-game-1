@@ -67,7 +67,7 @@ class GUI:
 
 		randomButton = tk.Button(buttonFrame, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='#17B0F2', foreground='white')
 
-		nextSentenceButton = tk.Button(buttonFrame, text='Next Sentence', command=self.nextSentence, highlightbackground='blue', background='#17B0F2', foreground='white')
+		nextSentenceButton = tk.Button(buttonFrame, text='Next Sentence', command=self.resetOrder, highlightbackground='blue', background='#17B0F2', foreground='white')
 
 		resetButton = tk.Button(buttonFrame, text='Reset', command=self.hardReset, highlightbackground='blue', background='#980000', foreground='white')
 
