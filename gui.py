@@ -19,7 +19,6 @@ class GUI:
 		self.sentenceList = []
 		self.sentenceCheck = None
 		self.root = tk.Tk()
-
 		self.sentence = tk.StringVar()
 		self.wpmVar = tk.StringVar()
 		self.avgwpmVar = tk.StringVar()
@@ -40,6 +39,7 @@ class GUI:
 		currentSentence = tk.Label(self.root, textvariable=self.sentence, background='green', font=('Helvetica', 20), padx=100, pady=5, height=5, wraplength=700)
 
 		checkWord = self.root.register(self.isValidSentence)
+
 		self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'), insertbackground='white')
 
 		# Framing WPM labels
@@ -82,6 +82,7 @@ class GUI:
 		"""
 		checks the contents of the entry widget to see when the user starts typing
 		and when their sentence matches the required sentence.
+		-add find_wrong_word to check each time a character is typed.
 		:param index:
 		:param text:
 		:return:
@@ -95,7 +96,22 @@ class GUI:
 		if text == self.sentenceCheck:
 			self.end = time.time()
 			self.getWpm()
+
 		return True
+
+	def find_wrong_word(self):
+		""" creates a list by splitting the current contents of the list,
+		then does the below for loop to return the missing words from the self.sentence check,
+		effectively shows the user what word they typed wrong.
+
+		Example:
+		x = ['word', 'cat', 'dog,']
+		y = ['word', 'dog,']
+		i = 0
+		for item in x:
+			x.remove(y[i])
+     		i += 1
+		"""
 
 	def getWpm(self):
 		"""
