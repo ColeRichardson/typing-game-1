@@ -34,18 +34,18 @@ class GUI:
         self.root.title("Typing Game")
         self.root.geometry("1500x1000")
 
-        title = tk.Label(self.root, text='Welcome to Typing Tutor! Import a text file to begin! :D', background='#3c7ee8', font=('Helvetica', 30), padx=10)
+        title = tk.Label(self.root, text='Welcome to Typing Tutor! Import a text file to begin! :D', background='#3c7ee8', font=('Helvetica', 30), padx=10, height=2)
 
         currentSentence = tk.Label(self.root, textvariable=self.sentence, background='green', font=('Helvetica', 20), padx=100, pady=5, height=5, wraplength=700)
 
         checkWord = self.root.register(self.isValidSentence)
 
-        self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=3, font=('Helvetica', 15), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'), insertbackground='white')
+        self.inputTextBox = tk.Entry(self.root, bg='black', width=100, bd=4, font=('Helvetica', 25), foreground='white', validate='key', validatecommand=(checkWord, '%i', '%P'), insertbackground='white')
 
         # Framing WPM labels
         wpmFrame = tk.Frame(self.root)
-        currentWpmLabel = tk.Label(wpmFrame, textvariable=self.wpmVar, background='red', font=15, padx=20, pady=20)
-        avgWpmLabel = tk.Label(wpmFrame, textvariable=self.avgwpmVar, padx=10, pady=10, font=12)
+        currentWpmLabel = tk.Label(wpmFrame, textvariable=self.wpmVar, background='red', font=('Helvetica', 20), padx=20, pady=20, width=50, height=4)
+        avgWpmLabel = tk.Label(wpmFrame, textvariable=self.avgwpmVar, padx=10, pady=10, font=('Helvetica', 20), width=50, height=4)
 
         # Packing widgets
         title.pack(fill=tk.X)
@@ -63,13 +63,13 @@ class GUI:
         """
         buttonFrame = tk.Frame(self.root)
 
-        importFile = tk.Button(buttonFrame, text='Import txt file', command=self.promptImport, highlightbackground='blue',background='#9544E5', foreground='white')
+        importFile = tk.Button(buttonFrame, text='Import txt file', command=self.promptImport, highlightbackground='blue',background='#9544E5', foreground='white', font=('Helvetica', 20), width=15, height=2)
 
-        randomButton = tk.Button(buttonFrame, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='#17B0F2', foreground='white')
+        randomButton = tk.Button(buttonFrame, text='Random Sentence', command=self.resetRandom, highlightbackground='blue', background='#17B0F2', foreground='white', font=('Helvetica', 20), width=15, height=2)
 
-        nextSentenceButton = tk.Button(buttonFrame, text='Next Sentence', command=self.resetOrder, highlightbackground='blue', background='#17B0F2', foreground='white')
+        nextSentenceButton = tk.Button(buttonFrame, text='Next Sentence', command=self.resetOrder, highlightbackground='blue', background='#17B0F2', foreground='white', font=('Helvetica', 20), width=15, height=2)
 
-        resetButton = tk.Button(buttonFrame, text='Reset', command=self.hardReset, highlightbackground='blue', background='#980000', foreground='white')
+        resetButton = tk.Button(buttonFrame, text='Reset', command=self.hardReset, highlightbackground='blue', background='#980000', foreground='white', font=('Helvetica', 20), width=15, height=2)
 
         importFile.pack(side=tk.LEFT, padx=5)
         nextSentenceButton.pack(side=tk.LEFT, padx=5)
